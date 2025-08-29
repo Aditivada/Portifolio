@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alien Burgers - Hamburgueria Alienígena</title>
+  <style>
+    /* Reset básico */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: #0b0c0f; color: #d4f1f9; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    h1, h2 { color: #79ff97; text-align: center; margin-bottom: 15px; text-shadow: 0 0 5px #79ff97; }
+    
+    /* Menu */
+    #menu { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 20px; width: 100%; max-width: 1100px; margin-bottom: 40px; }
+    .item { background: #11141a; border-radius: 10px; padding: 15px; box-shadow: 0 0 10px #79ff97aa; transition: transform 0.2s ease; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .item:hover { transform: scale(1.03); box-shadow: 0 0 20px #79ff97; }
+    .item img { width: 160px; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; border: 2px solid #79ff97; }
+    .item h3 { margin-bottom: 8px; color: #a3ffb2; text-align: center; }
+    .item p { font-size: 0.9rem; color: #b8e5cd; flex-grow: 1; margin-bottom: 10px; text-align: center; }
+    .price { color: #6bd06d; margin-bottom: 10px; font-size: 1.1rem; }
+    .qty-controls { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+    .qty-controls button { background: #79ff97; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; color: #0b0c0f; }
+    .qty-controls input { width: 54px; text-align: center; padding: 6px; border-radius: 6px; border: 1px solid #355; background:#0b0c0f; color:#d4f1f9; }
+    .item button.add { margin-top: 8px; background: #79ff97; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; color: #0b0c0f; }
+    .item button.add:hover { background: #4bc766; }
+
+    /* Carrinho */
+    #cart { background: #11141a; width: 100%; max-width: 1100px; padding: 15px; border-radius: 12px; box-shadow: 0 0 10px #79ff97aa; margin-bottom: 24px; }
+    #cart h2 { margin-bottom: 12px; text-align: center; color: #79ff97; }
+    #cart-items { max-height: 320px; overflow-y: auto; margin-bottom: 12px; }
+    .cart-item { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; background: #162020; margin-bottom: 8px; padding: 8px 12px; border-radius: 8px; box-shadow: inset 0 0 5px #79ff9780; }
+    .cart-item .title { font-size: 1rem; color: #b8e5cd; }
+    .cart-item .line-total { font-weight: 700; color: #a3ffb2; }
+    .cart-controls { display: flex; align-items: center; gap: 6px; }
+    .cart-controls button { background: #79ff97; border: none; padding: 4px 8px; border-radius: 6px; font-weight: 700; cursor: pointer; color: #0b0c0f; }
+    .cart-controls button:hover { background: #4bc766; }
+
+    .totals { border-top: 1px dashed #2a3; padding-top: 10px; display: grid; gap: 6px; }
+    .totals .row { display: flex; justify-content: space-between; align-items: center; }
+    .totals .label { color:#b8e5cd; }
+    .totals .value { color:#a3ffb2; font-weight:700; }
+
+    /* Checkout */
+    #checkout { background: #11141a; width: 100%; max-width: 1100px; padding: 15px; border-radius: 12px; box-shadow: 0 0 10px #79ff97aa; margin-bottom: 36px; display: grid; gap: 12px; }
+    #checkout h2 { text-align:center; }
+    .field { display: grid; gap: 6px; }
+    label { color:#b8e5cd; font-size: 0.95rem; }
+    input[type="text"], select { padding: 10px; border-radius: 8px; border: 1px solid #355; background:#0b0c0f; color:#d4f1f9; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .btn { background: #79ff97; border: none; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: 800; color: #0b0c0f; box-shadow: 0 0 10px #79ff97aa; }
+    .btn:hover { background:#4bc766; }
+    .btn.secondary { background: transparent; color:#79ff97; border:1px solid #79ff97; }
+
+    /* Toast */
+    #toast { position: fixed; bottom: 20px; right: 20px; background:#122; color:#a3ffb2; padding: 10px 14px; border-radius: 10px; box-shadow: 0 0 12px #79ff97aa; opacity: 0; transform: translateY(12px); transition: all .25s ease; pointer-events: none; }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* Responsivo */
+    @media (min-width: 700px) {
+      .checkout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>👽 Alien Burgers</h1>
+  <h2>Hamburgueria com tema Alienígena</h2>
+
+  <section id="menu"></section>
+
+  <section id="cart" aria-label="Carrinho de compras">
+    <h2>🛒 Seu Pedido</h2>
+    <div id="cart-items"></div>
+
+    <div class="totals">
+      <div class="row"><span class="label">Subtotal</span><span id="subtotal" class="value">R$ 0,00</span></div>
+      <div class="row">
+        <span class="label">Entrega</span>
+        <span id="delivery" class="value">R$ 5,00</span>
+      </div>
+      <div class="row">
+        <span class="label">Desconto</span>
+        <span id="discount" class="value">- R$ 0,00</span>
+      </div>
+      <div class="row" style="border-top:1px solid #2a3; padding-top:6px;">
+        <strong class="label">Total</strong>
+        <strong id="cart-total" class="value">R$ 0,00</strong>
+      </div>
+    </div>
+  </section>
+
+  <section id="checkout">
+    <h2>💳 Finalizar Pedido</h2>
+    <div class="checkout-grid">
+      <div class="field">
+        <label for="payment">Forma de pagamento</label>
+        <select id="payment">
+          <option value="pix">Pix</option>
+          <option value="debito">Débito</option>
+          <option value="credito">Crédito</option>
+          <option value="dinheiro">Dinheiro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="address">Endereço (opcional)</label>
+        <input id="address" type="text" placeholder="Rua, número, bairro" />
+      </div>
+      <div class="field">
+        <label for="coupon">Cupom de desconto</label>
+        <div style="display:flex; gap:8px;">
+          <input id="coupon" type="text" placeholder="Ex.: ALIEN10" />
+          <button class="btn" type="button" id="apply-coupon">Aplicar</button>
+        </div>
+        <small style="color:#6bd06d;">Cupons de exemplo: <code>ALIEN10</code> (10%) • <code>GALAXY15</code> (15%)</small>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="button" id="finalizar">Confirmar Pedido</button>
+      <button class="btn secondary" type="button" id="whatsapp">Enviar via WhatsApp</button>
+      <button class="btn secondary" type="button" id="limpar">Limpar Carrinho</button>
+    </div>
+  </section>
+
+  <section id="contato">
+    <h2>📍 Contato & Localização</h2>
+    <div class="contato-container" style="display: flex; flex-direction: column; gap: 1rem; max-width:1100px; margin:0 auto;">
+      <div class="contato-info">
+        <p><strong>📞 Telefone:</strong> (13) 99999‑8888</p>
+        <p><strong>📧 E‑mail:</strong> contato@alienburgers.com</p>
+        <p><strong>📍 Endereço:</strong>
+          <a href="https://www.google.com/maps/place/R.+Amador+Bueno+da+Ribeira+-+Centro,+S%C3%A3o+Vicente+-+SP,+11320-060/" target="_blank" rel="noopener noreferrer">R. Amador Bueno da Ribeira, Centro, São Vicente - SP</a>
+        </p>
+        <p><strong>⏰ Horário:</strong> Seg a Dom – 18h às 00h</p>
+      </div>
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.142099428089!2d-46.37868828448377!3d-23.969518384578746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce1cbbf78237fb%3A0xe9f141b2a2a6e6eb!2sR.%20Amador%20Bueno%20da%20Ribeira%20-%20Centro%2C%20S%C3%A3o%20Vicente%20-%20SP%2C%2011320-060!5e0!3m2!1spt-BR!2sbr!4v1693333333333!5m2!1spt-BR!2sbr" 
+        width="100%" height="250" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </section>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ==== Produtos (exemplo) ====
+    const products = [
+      { name: "Alien Burger Clássico", desc: "Hambúrguer de carne suculenta com queijo verde espacial.", price: 29.90, image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80" },
+      { name: "Space Fries", desc: "Batatas fritas crocantes com tempero alienígena.", price: 12.50, image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=400&q=80" },
+      { name: "Cosmic Onion Rings", desc: "Anéis de cebola dourados e crocantes com toque cósmico.", price: 15.00, image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" },
+      { name: "Galactic Veggie Burger", desc: "Hambúrguer vegetariano com ingredientes interplanetários.", price: 27.00, image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80" },
+      { name: "Nebula Shake", desc: "Milkshake cremoso com sabores de galáxia distante.", price: 18.00, image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" },
+      { name: "Martian Salad", desc: "Salada fresca com ingredientes de outro mundo.", price: 14.50, image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" },
+      { name: "Astro Cheese Burger", desc: "Duplo cheeseburger com queijo derretido galáctico.", price: 34.90, image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80" },
+      { name: "UFO Nuggets", desc: "Nuggets crocantes em formato de disco voador.", price: 16.50, image: "https://images.unsplash.com/photo-1571091718767-6f851b24e4d3?auto=format&fit=crop&w=400&q=80" }
+    ];
+
+    // ==== Utilidades ====
+    const BRL = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const toastEl = document.getElementById('toast');
+    const showToast = (msg) => {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 1800);
+    };
+
+    // ==== DOM ==== 
+    const menu = document.getElementById('menu');
+    const cartItems = document.getElementById('cart-items');
+    const subtotalEl = document.getElementById('subtotal');
+    const deliveryEl = document.getElementById('delivery');
+    const discountEl = document.getElementById('discount');
+    const cartTotal = document.getElementById('cart-total');
+
+    const paymentSel = document.getElementById('payment');
+    const addressInput = document.getElementById('address');
+    const couponInput = document.getElementById('coupon');
+    const applyCouponBtn = document.getElementById('apply-coupon');
+    const finalizarBtn = document.getElementById('finalizar');
+    const whatsappBtn = document.getElementById('whatsapp');
+    const limparBtn = document.getElementById('limpar');
+
+    // ==== Estado ====
+    let cart = [];
+    let deliveryFee = 5.00;
+    let coupon = null; // { code: 'ALIEN10', percent: 10 }
+
+    const COUPONS = {
+      'ALIEN10': 10,
+      'GALAXY15': 15
+    };
+
+    // ==== Persistência ====
+    const saveState = () => {
+      localStorage.setItem('alien_cart', JSON.stringify(cart));
+      localStorage.setItem('alien_coupon', JSON.stringify(coupon));
+    };
+    const loadState = () => {
+      const savedCart = localStorage.getItem('alien_cart');
+      const savedCoupon = localStorage.getItem('alien_coupon');
+      if (savedCart) cart = JSON.parse(savedCart);
+      if (savedCoupon) coupon = JSON.parse(savedCoupon);
+      if (coupon && coupon.code) couponInput.value = coupon.code;
+    };
+
+    // ==== Renderização de Menu ====
+    function renderMenu() {
+      menu.innerHTML = '';
+      products.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" />
+          <h3>${item.name}</h3>
+          <p>${item.desc}</p>
+          <div class="price">${BRL(item.price)}</div>
+          <div class="qty-controls" aria-label="Selecionar quantidade">
+            <button aria-label="Diminuir" onclick="this.nextElementSibling.stepDown()">-</button>
+            <input type="number" min="1" value="1" />
+            <button aria-label="Aumentar" onclick="this.previousElementSibling.stepUp()">+</button>
+          </div>
+          <button class="add" aria-label="Adicionar ao carrinho">Adicionar</button>
+        `;
+        const addBtn = div.querySelector('.add');
+        const qtyInput = div.querySelector('input[type="number"]');
+        addBtn.addEventListener('click', () => {
+          const qty = Math.max(1, parseInt(qtyInput.value || '1', 10));
+          addToCart(index, qty);
+        });
+        menu.appendChild(div);
+      });
+    }
+
+    // ==== Carrinho ====
+    function addToCart(idx, qty = 1) {
+      const selected = products[idx];
+      const existing = cart.find(i => i.name === selected.name);
+      if (existing) existing.qty += qty; else cart.push({ ...selected, qty });
+      updateCart();
+      showToast(`✅ ${selected.name} x${qty} adicionado!`);
+    }
+
+    function changeQty(i, delta) {
+      cart[i].qty += delta;
+      if (cart[i].qty <= 0) cart.splice(i, 1);
+      updateCart();
+    }
+    function removeItem(i) { cart.splice(i, 1); updateCart(); }
+    function clearCart() { cart = []; updateCart(); showToast('🧹 Carrinho limpo'); }
+
+    function calculateTotals() {
+      const subtotal = cart.reduce((acc, it) => acc + it.price * it.qty, 0);
+      const discountPercent = coupon?.percent || 0;
+      const discount = subtotal * (discountPercent / 100);
+      const total = Math.max(0, subtotal - discount) + (cart.length ? deliveryFee : 0);
+      return { subtotal, discount, total };
+    }
+
+    function updateCart() {
+      cartItems.innerHTML = '';
+      cart.forEach((item, i) => {
+        const line = document.createElement('div');
+        line.className = 'cart-item';
+        const unit = BRL(item.price);
+        const lineTotal = BRL(item.price * item.qty);
+        line.innerHTML = `
+          <div class="title">${item.name} · ${unit} × ${item.qty}</div>
+          <div class="cart-controls">
+            <button aria-label="Diminuir" onclick="changeQty(${i}, -1)">-</button>
+            <button aria-label="Aumentar" onclick="changeQty(${i}, 1)">+</button>
+            <button aria-label="Remover" onclick="removeItem(${i})">🗑️</button>
+          </div>
+          <div class="line-total">${lineTotal}</div>
+        `;
+        cartItems.appendChild(line);
+      });
+
+      const { subtotal, discount, total } = calculateTotals();
+      subtotalEl.textContent = BRL(subtotal);
+      deliveryEl.textContent = BRL(cart.length ? deliveryFee : 0);
+      discountEl.textContent = `- ${BRL(discount)}`;
+      cartTotal.textContent = BRL(total);
+      saveState();
+    }
+
+    // ==== Cupom ====
+    function applyCoupon() {
+      const code = (couponInput.value || '').toUpperCase().trim();
+      if (!code) { coupon = null; updateCart(); showToast('Cupom removido'); return; }
+      const percent = COUPONS[code];
+      if (!percent) { showToast('🚫 Cupom inválido'); return; }
+      coupon = { code, percent };
+      updateCart();
+      showToast(`🎁 Cupom aplicado: ${percent}% OFF`);
+    }
+
+    // ==== Finalizar / WhatsApp ====
+    function buildOrderSummary() {
+      const lines = [];
+      lines.push('👽 *Pedido Alien Burgers*');
+      if (!cart.length) { lines.push('Carrinho vazio.'); return lines.join('\n'); }
+      cart.forEach(it => lines.push(`• ${it.qty}× ${it.name} — ${BRL(it.price * it.qty)}`));
+      const { subtotal, discount, total } = calculateTotals();
+      if (coupon?.code) lines.push(`\nCupom: ${coupon.code} (−${coupon.percent}%) → −${BRL(discount)}`);
+      lines.push(`Entrega: ${BRL(cart.length ? deliveryFee : 0)}`);
+      lines.push(`Subtotal: ${BRL(subtotal)}`);
+      lines.push(`*Total: ${BRL(total)}*`);
+      lines.push(`Pagamento: ${paymentSel.options[paymentSel.selectedIndex].text}`);
+      if (addressInput.value.trim()) lines.push(`Endereço: ${addressInput.value.trim()}`);
+      return lines.join('\n');
+    }
+
+    function finalizarPedido() {
+      if (!cart.length) { alert('Seu carrinho está vazio!'); return; }
+      const resumo = buildOrderSummary();
+      alert(resumo);
+      // Limpa carrinho após confirmação
+      clearCart();
+      coupon = null; couponInput.value = '';
+      saveState();
+    }
+
+    function enviarWhatsApp() {
+      if (!cart.length) { showToast('Carrinho vazio'); return; }
+      const resumo = buildOrderSummary();
+      const phone = '5513999998888'; // telefone da loja
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(resumo)}`;
+      window.open(url, '_blank');
+    }
+
+    // ==== Eventos ====
+    applyCouponBtn.addEventListener('click', applyCoupon);
+    finalizarBtn.addEventListener('click', finalizarPedido);
+    whatsappBtn.addEventListener('click', enviarWhatsApp);
+    limparBtn.addEventListener('click', clearCart);
+
+    // ==== Boot ====
+    window.changeQty = changeQty; // expõe para botões inline
+    window.removeItem = removeItem; // expõe para botões inline
+
+    loadState();
+    renderMenu();
+    updateCart();
+  </script>
+</body>
+</html>

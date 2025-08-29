@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chácara Recanto Vitória - Pedro de Toledo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #fdfdfd;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* HEADER */
+    header {
+      background: url('https://scontent.fssz1-1.fna.fbcdn.net/v/t1.6435-9/65306200_2848210315196372_7981211840665354240_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeE5xh4Di4d8uOC1g0Z0v39gBiE3GdIKdTwGITcZ0gp1PDkk7uMSAMv6V3zrwAcHGcpsPzkDjQns2TJLC6zlDOic&_nc_ohc=BIENlBkA-o4Q7kNvwFEp0h0&_nc_oc=AdlDsYya2Wa2sqmEn2h7kkANRZ8dBn9ph5akNnw4hHzVjPM6iDJk284bx34rqh7jEO3r_0j9py0N_y7lDtN-duZB&_nc_zt=23&_nc_ht=scontent.fssz1-1.fna&_nc_gid=GlZwFcOp62bIer2L0x5rmw&oh=00_AfWmecm3e0b4q79328JnzrjUDtuhn8aJY5e_mERXjscaIQ&oe=68D989BB') center/cover no-repeat;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-shadow: 1px 1px 8px rgba(0,0,0,0.8);
+      text-align: center;
+      padding: 20px;
+    }
+
+    header h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.4rem;
+      margin-top: 15px;
+    }
+
+    /* NAVBAR */
+    nav {
+      background-color: #2d6a4f;
+      padding: 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: #fff;
+      margin: 0 20px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffd166;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 60px 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h2 {
+      margin-bottom: 30px;
+      color: #2d6a4f;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    /* SERVIÇOS */
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .service {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .service:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+
+    .service h3 {
+      color: #1b4332;
+      margin-bottom: 10px;
+    }
+
+    /* GALERIA */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: transform 0.3s;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    /* CONTATO */
+    #contato .contato-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    #contato .contato-info {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    #contato a {
+      color: #2d6a4f;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    #contato a:hover {
+      text-decoration: underline;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #2d6a4f;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+      margin-top: 40px;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 800px) {
+      #contato .contato-container {
+        grid-template-columns: 1fr;
+      }
+      header h1 { font-size: 2.5rem; }
+      header p { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Chácara Recanto Vitória</h1>
+    <p>Natureza, conforto e tranquilidade em Pedro de Toledo</p>
+  </header>
+
+  <nav>
+    <a href="#sobre">Sobre</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#galeria">Galeria</a>
+    <a href="#contato">Contato</a>
+  </nav>
+
+  <section id="sobre">
+    <h2>Sobre a Pousada</h2>
+    <p>Localizada em meio à natureza exuberante de Pedro de Toledo, a Pousada Recanto Vitória oferece uma experiência única de descanso e bem-estar. Cercada por mata atlântica, trilhas e cachoeiras, é o destino perfeito para quem busca paz, aventura e contato com a natureza.</p>
+  </section>
+
+  <section id="servicos">
+    <h2>Nossos Serviços</h2>
+    <div class="services">
+      <div class="service">
+        <h3>Suítes Confortáveis</h3>
+        <p>Quartos com cama de casal, ventilador e com vista para a natureza.</p>
+      </div>
+      <div class="service">
+        <h3>Café da Manhã</h3>
+        <p>Incluso na diária, com produtos locais e naturais.</p>
+      </div>
+      <div class="service">
+        <h3>Piscina e Área de Lazer</h3>
+        <p>Piscina externa, redes e espaço kids.</p>
+      </div>
+      <div class="service">
+        <h3>Trilhas e Ecoturismo</h3>
+        <p>Parcerias com guias locais para trilhas e passeios ecológicos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="galeria">
+    <h2>Galeria</h2>
+    <div class="gallery">
+      <img src="https://scontent.fssz1-1.fna.fbcdn.net/v/t39.30808-6/486289870_1113287810811411_8696875868231838512_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGiVAXGRE7pngXAMbDup_YWtl7PhMzivjq2Xs-EzOK-OliLhlaLe5jBJ-r7Pgs-dn-HzUI8WQvBt_xfmUMWbwW4&_nc_ohc=NpjyQchyEfQQ7kNvwFz8vW5&_nc_oc=Adn0lITWGcxdnhJ3VePRTeeErcFVSSCvcwmqUCIkoBvfjPFb8wIcKsyCEoPqMmSKkaWecfrTLrKDFL1hJfUDF4Zv&_nc_zt=23&_nc_ht=scontent.fssz1-1.fna&_nc_gid=rzWLcXsrSdnvAuh9gRojZA&oh=00_AfWJeXy8RMMdlZfyx7oz2gL5hUv0bUEcH_qhPWT9y5C99A&oe=68B7D4F5" alt="Suíte">
+      <img src="https://scontent.fssz1-1.fna.fbcdn.net/v/t1.6435-9/65137622_2848207461863324_2432481335411998720_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEIAMGfldLkkASU2auiiA_ZUgAPSXemJyRSAA9Jd6YnJB1EV_nzrQ27mRcdXf5dbJ0m-JV5BChP3w38UT5VOwSp&_nc_ohc=dIogGKMpBkUQ7kNvwGt_yb5&_nc_oc=Adk2M4QyfSHnGbkOi81lwdhhkcDTe8ew7lzKLq6oJLZO0i7Fpc4CWwX0Uv_l0k5gwL37cPP77FmFbBWQlJUBhJak&_nc_zt=23&_nc_ht=scontent.fssz1-1.fna&_nc_gid=yS2xTbmLILvP7ND8rhy_zw&oh=00_AfViLtkUNmjzEY7vVouJvvu6x6LwxCRJ8aA74Mp_f8P1Mw&oe=68D9AD47" alt="Área externa">
+      <img src="https://scontent.fssz1-1.fna.fbcdn.net/v/t1.6435-9/70352767_2986501714700564_6339216212425179136_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGKlfGnE1DbAW2eQP3Dyg_5mYv23BOpngCZi_bcE6meAM-ufO-ubxiOiTV2Jhx8tt_u9-D5qmfPvkcUsFym_gf8&_nc_ohc=F-oL7VocsgAQ7kNvwFXw1Z6&_nc_oc=AdmVeGaqSGt5AVH9JnzJQzvE93w4fng9mUvj8s_jouV9aOPl9COQFUjfQMcdwtf-3pQlw7UojcriSQV4blYzKp9E&_nc_zt=23&_nc_ht=scontent.fssz1-1.fna&_nc_gid=q0tg1ggLW1mW8hnz26KNCw&oh=00_AfXnyVIoSdi0Ho1V4nGG1R0qGFhBiksNv-HKpuiwgLdE7Q&oe=68D982EF" alt="Café da manhã">
+      <img src="https://scontent.fssz1-1.fna.fbcdn.net/v/t39.30808-6/465773389_9480651755285495_7956798110928022800_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFh0bu54l7UjBZ4ODI7vx4_4cRUtS4ag1_hxFS1LhqDX4XjTPXSgjR6Y4eSsPt0lr-s9WcUl-dz2uC2tKX-DFbI&_nc_ohc=f4C0HA18giwQ7kNvwGXl4J4&_nc_oc=AdnaY2KisPk6W5rbeRPSfhalZlbl8XYV55uNDrSfz16kDqyLCascOfiQ9FplnUiygVTBVhE_biZzvMbqBJK4T2Ie&_nc_zt=23&_nc_ht=scontent.fssz1-1.fna&_nc_gid=mC4YgyI1yz-tEXk3UsjgjA&oh=00_AfWZ6I2I1IxEjcu3Bg6UisOItsGzTNeA8O2_idFuvBW_sQ&oe=68B7F47C" alt="Natureza local">
+    </div>
+  </section>
+
+ <section id="contato">
+  <h2>📍 Contato & Localização</h2>
+  <div class="contato-container">
+    <div class="contato-info">
+      <p><strong>📞 Telefone:</strong> (13) 99999-8888</p>
+      <p><strong>📧 E-mail:</strong> contato@recantovitoria.com</p>
+      <p><strong>📍 Endereço:</strong> 
+        <a href="https://www.google.com/maps/dir//Chácara+Recanto+Vitória/" target="_blank">
+          Chácara Recanto Vitória, Pedro de Toledo - SP
+        </a>
+      </p>
+      <p><strong>⏰ Horário:</strong> Seg a Dom – 07h às 00h</p>
+    </div>
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3733.7497213082416!2d-47.25906378473032!3d-24.304616584020857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cfe3d13573deb7%3A0x42d9af616abe5a8d!2sCh%C3%A1cara%20Recanto%20Vit%C3%B3ria!5e0!3m2!1spt-BR!2sbr!4v1693324400000!5m2!1spt-BR!2sbr" 
+      width="100%" height="250" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</section>
+
+  <footer>
+    <p>&copy; 2025 Pousada Chácara Recanto Vitória. Todos os direitos reservados.</p>
+  </footer>
+
+</body>
+</html>
